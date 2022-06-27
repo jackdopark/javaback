@@ -33,7 +33,7 @@ public class FIleReadMain {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			//4. 스트림 닫
+			//4. 스트림 닫기
 		}finally {
 				try {
 					if(br != null) br.close();
