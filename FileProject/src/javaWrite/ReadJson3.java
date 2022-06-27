@@ -5,52 +5,39 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ReadJson3 {
-	//data.json 파일에서 성별이 남자고 Id 값이 3의 배수인 사람만 조회한다.
+	//city.list.json에 있는 내용 중 한국 도시마나 꺼내서 출
 
 	public static void main(String[] args) {
-		File file = new File("data.json");
-		FileReader fr = null;
-		BufferedReader br = null;
-		
-		
+
 		try {
-			fr = new FileReader(file);
-			br = new BufferedReader(fr);
-			String r = new String();
-			
-			while(true) {
-				String s = br.readLine();
-				if( s == null ) break;
-				r += s;
-			}
-			JSONArray arr = new JSONArray(r); //json으로 바꾼부분
+			//밑에 두줄은 파일에 텍스트가 많을떄 검색시간을 줄이기 위해 쓰인다. 
+			byte[] encode = Files.readAllBytes(Paths.get("city.list.json"));
+			String r = new String(encode,"UTF-8");
+
+			JSONArray arr = new JSONArray(r);
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject obj = arr.getJSONObject(i);
-				if(obj.get("gender").equals("Male") && obj.getInt("id") % 3 == 0 ){
-					System.out.println(obj.get("id")+ " " + obj.get("first_name")+ " " +obj.get("last_name")+ " " + obj.get("gender")+ " " + obj.get("ip_address")+" " + obj.get("email"));					
+				//System.out.println(Arrays.toString(JSONObject.getNames(obj)));
+				if(obj.get("country").equals("KR")){
+					JSONObject coord = obj.getJSONObject("coord");
+					System.out.println(obj.get("id")+ " " + obj.get("name")+ " " 
+				+obj.get("state")+ " " + obj.get("country")+ " (" +coord.getDouble("lon") +","+coord.getDouble("lat")+")" );
+					
 				}
+
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally {
-			try {
-				if(br != null) br.close();
-				if(fr != null) fr.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-	}
+		}
 	}
 	
 
